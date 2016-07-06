@@ -1,0 +1,14 @@
+#!/usr/bin/env ruby
+
+unless 2 == ARGV.size
+  puts Disclose.usage
+end
+
+instance = Disclose.new *ARGV
+
+begin
+  instance.run!
+rescue Disclose::Error => e
+  STDERR.puts e.message
+  exit 1
+end

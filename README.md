@@ -8,7 +8,11 @@ Pack your Node.js project into an executable without compiling.
 
 ## Usage
 
-    $ disclose path_to_your_node_js_project
+    $ disclose <node_path> <project_path>
+
+## Example
+
+    $ disclose /usr/local/bin/node /usr/local/lib/node_modules/coffee-script
 
 ## License
 
