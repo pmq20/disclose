@@ -1,6 +1,6 @@
 # Disclose
 
-Pack your Node.js project into an executable without compiling.
+Pack your Node.js project into an executable without recompiling Node.js.
 
 ## Installation
 

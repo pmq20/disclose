@@ -9,8 +9,8 @@ Gem::Specification.new do |spec|
   spec.authors       = ["The rugged tests are fragile"]
   spec.email         = ["pmq2001@gmail.com"]
 
-  spec.summary       = %q{Pack your Node.js project into an executable without compiling.}
-  spec.description   = %q{Pack your Node.js project into an executable without compiling.}
+  spec.summary       = %q{Pack your Node.js project into an executable without recompiling Node.js.}
+  spec.description   = %q{Pack your Node.js project into an executable without recompiling Node.js.}
   spec.homepage      = "https://github.com/pmq20/disclose"
   spec.license       = "MIT"
 
