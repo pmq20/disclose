@@ -1,4 +1,6 @@
 require "disclose/version"
+require "disclose/c"
+require 'fileutils'
 require 'shellwords'
 require 'json'
 
@@ -26,18 +28,37 @@ class Disclose
 
   def run!
     tar!
-    headers!
+    header!
+    c!
   end
 
   def tar!
     chdir(@project_path) do
-      target = "#{@working_dir}/tar.tar"
-      exe("tar cf #{Shellwords.escape(target)} . -C #{Shellwords.escape File.dirname @node_path} #{Shellwords.escape File.basename @node_path}")
+      @tar_path = "#{@working_dir}/tar.tar"
+      exe("tar cf #{Shellwords.escape(@tar_path)} . -C #{Shellwords.escape File.dirname @node_path} #{Shellwords.escape File.basename @node_path}")
     end
   end
   
-  def headers!
-    "TODO: headers!"
+  def header!
+    chdir(@working_dir) do
+      exe("xxd -i tar.tar > tar.h")
+    end
+  end
+  
+  def c!
+    chdir(@working_dir) do
+      @binaries.each do |key,value|
+        FileUtils.cp('tar.h', "#{key}.c")
+        File.open("#{key}.c", "a") do |f|
+          f.puts C.src(value)
+        end
+        exe("cc #{key}.c -o #{key}")
+
+        puts "======= Success ======="
+        puts File.join(@working_dir, key)
+        puts "======================="
+      end
+    end
   end
 
   def usage
@@ -49,6 +70,7 @@ class Disclose
   def exe(cmd)
     STDERR.puts "$ #{cmd}"
     STDERR.print `#{cmd}`
+    raise "#{cmd} failed!" unless $?.success?
   end
   
   def chdir(path)
