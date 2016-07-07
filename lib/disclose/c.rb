@@ -14,7 +14,7 @@ class Disclose
           int ret = -1;
           char cmd[256] = {0};
           char arg[256] = {0};
-          char *argv2 = NULL;
+          char **argv2 = NULL;
           int i, index;
 
           mktemp(file);
