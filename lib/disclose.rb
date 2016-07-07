@@ -50,6 +50,7 @@ Usage: disclose [node_path] [project_path]
   def header!
     chdir(@working_dir) do
       exe("xxd -i tar.tar > tar.h")
+      @md5 = Digest::MD5.file('tar.h').to_s
     end
   end
   
@@ -58,7 +59,7 @@ Usage: disclose [node_path] [project_path]
       @binaries.each do |key,value|
         FileUtils.cp('tar.h', "#{key}.c")
         File.open("#{key}.c", "a") do |f|
-          f.puts C.src(value)
+          C.src(f, value, @md5)
         end
         exe("cc #{key}.c -o #{key}")
 
