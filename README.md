@@ -2,7 +2,11 @@
 
 Pack your Node.js project into an executable without recompiling Node.js.
 
-[![Build Status](https://travis-ci.org/pmq20/disclose.svg?branch=master)](https://travis-ci.org/pmq20/disclose)
+[![Gem Version](https://badge.fury.io/rb/disclose.svg)](https://badge.fury.io/rb/disclose)
+[![Build Status](https://travis-ci.org/pmq20/disclose.svg)](https://travis-ci.org/pmq20/disclose)
+[![Code Climate](https://codeclimate.com/github/pmq20/disclose/badges/gpa.svg)](https://codeclimate.com/github/pmq20/disclose)
+[![codecov.io](https://codecov.io/github/pmq20/disclose/coverage.svg?branch=master)](https://codecov.io/github/pmq20/disclose?branch=master)
+[![](http://inch-ci.org/github/pmq20/disclose.svg?branch=master)](http://inch-ci.org/github/pmq20/disclose?branch=master)
 
 ## Installation
 
