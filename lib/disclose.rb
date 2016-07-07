@@ -2,13 +2,17 @@ require "disclose/version"
 require "disclose/c"
 require 'fileutils'
 require 'shellwords'
+require 'tmpdir'
 require 'json'
 
 class Disclose
   class Error < RuntimeError; end
 
   def self.usage
-    'Usage: disclose [node_path] [project_path]'
+    %q{
+Usage: disclose [node_path] [project_path]
+  e.g. disclose /usr/local/bin/node /usr/local/lib/node_modules/coffee-script
+    }.strip
   end
   
   def initialize(node_path, project_path)
@@ -20,13 +24,13 @@ class Disclose
   
   def parse_binaries!
     @package_path = File.join(@project_path, 'package.json')
-    raise "No package.json exist at #{@package_path}." unless File.exist?(@package_path)
+    raise Error, "No package.json exist at #{@package_path}." unless File.exist?(@package_path)
     @package_json = JSON.parse File.read @package_path
     @binaries = @package_json['bin']
     if @binaries
       STDERR.puts "Detected binaries: #{@binaries}"
     else
-      raise "No Binaries detected inside #{@package_path}."
+      raise Error, "No Binaries detected inside #{@package_path}."
     end
   end
 
@@ -70,7 +74,7 @@ class Disclose
   def exe(cmd)
     STDERR.puts "$ #{cmd}"
     STDERR.print `#{cmd}`
-    raise "#{cmd} failed!" unless $?.success?
+    raise Error, "#{cmd} failed!" unless $?.success?
   end
   
   def chdir(path)
