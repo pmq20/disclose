@@ -9,6 +9,8 @@ class Disclose
           #include <stdio.h>
           #include <stdlib.h>
           #include <assert.h>
+          #include <sys/types.h>
+          #include <sys/stat.h>
 
           void untar() {
             char file[] = "/tmp/disclose.file.XXXXXX";
@@ -25,6 +27,8 @@ class Disclose
             fclose(fp);
 
             #{Gem.win_platform? ? tar_windows : tar}
+
+            rename(dir, "/tmp/disclose.#{md5}");
           }
 
           int main(int argc, char const *argv[]) {
@@ -32,7 +36,12 @@ class Disclose
             char arg[256] = {0};
             char **argv2 = NULL;
             int i, index;
+            struct stat info;
 
+            if( stat( "/tmp/disclose.#{md5}", &info ) != 0 )
+                untar();
+
+            assert(0 == stat( "/tmp/disclose.#{md5}", &info ) && info.st_mode & S_IFDIR);
 
             snprintf(cmd, 255, "%s/node", dir);
             snprintf(arg, 255, "%s/#{name}", dir);
