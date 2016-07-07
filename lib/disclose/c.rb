@@ -37,7 +37,7 @@ class Disclose
           argv2[0] = cmd;
           argv2[1] = arg;
           index = 2;
-          for (i = 0; i < argc; ++i) {
+          for (i = 1; i < argc; ++i) {
             argv2[index] = argv[i];
             index += 1;
           }
