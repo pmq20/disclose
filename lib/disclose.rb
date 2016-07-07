@@ -4,6 +4,7 @@ require 'fileutils'
 require 'shellwords'
 require 'tmpdir'
 require 'json'
+require 'digest/md5'
 
 class Disclose
   class Error < RuntimeError; end

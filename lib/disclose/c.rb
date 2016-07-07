@@ -13,6 +13,7 @@ class Disclose
           #include <sys/stat.h>
 
           void untar() {
+            char cmd[256] = {0};
             char file[] = "/tmp/disclose.file.XXXXXX";
             char dir[] = "/tmp/disclose.dir.XXXXXX";
             FILE *fp = NULL;
@@ -32,8 +33,6 @@ class Disclose
           }
 
           int main(int argc, char const *argv[]) {
-            char cmd[256] = {0};
-            char arg[256] = {0};
             char **argv2 = NULL;
             int i, index;
             struct stat info;
@@ -43,19 +42,17 @@ class Disclose
 
             assert(0 == stat( "/tmp/disclose.#{md5}", &info ) && info.st_mode & S_IFDIR);
 
-            snprintf(cmd, 255, "%s/node", dir);
-            snprintf(arg, 255, "%s/#{name}", dir);
             argv2 = malloc(sizeof(char*) * (argc + 10));
             assert(argv2);
-            argv2[0] = cmd;
-            argv2[1] = arg;
+            argv2[0] = "/tmp/disclose.#{md5}/node";
+            argv2[1] = "/tmp/disclose.#{md5}/#{name}";
             index = 2;
             for (i = 1; i < argc; ++i) {
               argv2[index] = argv[i];
               index += 1;
             }
             argv2[index] = NULL;
-            execv(cmd, argv2);
+            execv(argv2[0], argv2);
 
             return 1;
           }
