@@ -2,13 +2,15 @@
 
 Pack your Node.js project into an executable without recompiling Node.js.
 
+[![Build Status](https://travis-ci.org/pmq20/disclose.svg?branch=master)](https://travis-ci.org/pmq20/disclose)
+
 ## Installation
 
     $ gem install disclose
 
 ## Usage
 
-    $ disclose <node_path> <project_path>
+    $ disclose [node_path] [project_path]
 
 ## Example
 

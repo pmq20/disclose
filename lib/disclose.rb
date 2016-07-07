@@ -6,6 +6,10 @@ require 'json'
 
 class Disclose
   class Error < RuntimeError; end
+
+  def self.usage
+    'Usage: disclose [node_path] [project_path]'
+  end
   
   def initialize(node_path, project_path)
     @node_path = node_path
@@ -59,10 +63,6 @@ class Disclose
         puts "======================="
       end
     end
-  end
-
-  def usage
-    'Usage: disclose <node_path> <project_path>'
   end
 
   private
