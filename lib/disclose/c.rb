@@ -16,6 +16,10 @@ class Disclose
         end
       end
 
+      def slash
+        Gem.win_platform? ? %q{\\\\} : '/'
+      end
+
       def src(f, name, md5)
         windows_prepare(f) if Gem.win_platform?
         f.puts unistd
@@ -37,7 +41,7 @@ class Disclose
             if (NULL != tmp_prefix) return;
             tmp_prefix = getenv("TEMP");
             if (NULL != tmp_prefix) return;
-            tmp_prefix = getcwd(cwd_path, sizeof(cwd_path));
+            tmp_prefix = cwd_path;
           }
 
           void untar() {
@@ -45,10 +49,12 @@ class Disclose
             char file[1024] = {0};
             char dir[1024] = {0};
             FILE *fp = NULL;
+            char *slashf = NULL;
+            char *slashd = NULL;
             int ret;
 
-            snprintf(file, 1023, "%s/disclose.file.XXXXXX", tmp_prefix);
-            snprintf(dir, 1023, "%s/disclose.dir.XXXXXX", tmp_prefix);
+            snprintf(file, 1023, "%s#{slash}disclose.file.XXXXXX", tmp_prefix);
+            snprintf(dir, 1023, "%s#{slash}disclose.dir.XXXXXX", tmp_prefix);
 
             mktemp(file);
             mktemp(dir);
@@ -59,7 +65,19 @@ class Disclose
             fwrite(tar_tar, sizeof(unsigned char), sizeof(tar_tar), fp);
             fclose(fp);
 
-            #{Gem.win_platform? ? tar_windows : tar}
+            #{tar_windows if Gem.win_platform?}
+
+            chdir(tmp_prefix);
+
+            slashf = strrchr(file, '#{slash}');
+            assert(slashf);
+            slashd = strrchr(dir, '#{slash}');
+            assert(slashd);
+            snprintf(cmd, 1023, "tar xf \\"%s\\" -C \\"%s\\"", slashf + 1, slashd + 1);
+            ret = system(cmd);
+            assert(0 == ret);
+
+            chdir(cwd_path);
 
             rename(dir, md5_path);
           }
@@ -71,8 +89,9 @@ class Disclose
             char arg0[1024] = {0};
             char arg1[1024] = {0};
 
+            getcwd(cwd_path, sizeof(cwd_path));
             get_tmp_prefix();
-            snprintf(md5_path, 1023, "%s/disclose.#{md5}", tmp_prefix);
+            snprintf(md5_path, 1023, "%s#{slash}disclose.#{md5}", tmp_prefix);
 
             if( stat( md5_path, &info ) != 0 )
                 untar();
@@ -82,8 +101,8 @@ class Disclose
             argv2 = malloc(sizeof(char*) * (argc + 10));
             assert(argv2);
 
-            snprintf(arg0, 1023, "%s/node", md5_path);
-            snprintf(arg1, 1023, "%s/#{name}", md5_path);
+            snprintf(arg0, 1023, "%s#{slash}node", md5_path);
+            snprintf(arg1, 1023, "%s#{slash}#{name}", md5_path);
 
             argv2[0] = arg0;
             argv2[1] = arg1;
@@ -100,21 +119,14 @@ class Disclose
         }
       end
       
-      def tar
-        %Q{
-          snprintf(cmd, 1023, "tar xf %s -C %s", file, dir);
-          ret = system(cmd);
-          assert(0 == ret);
-        }
-      end
-      
       def tar_windows
         %Q{
           char tardir[1024];
-          snprintf(tardir, 1023, "%s/disclose.tardir.XXXXXX", tmp_prefix);
+          snprintf(tardir, 1023, "%s#{slash}disclose.tardir.XXXXXX", tmp_prefix);
+          mktemp(tardir);
+          mkdir(tardir);
 
-          ret = chdir(tardir);
-          assert(0 == ret);
+          chdir(tardir);
 
           fp = fopen("libiconv_2.dll", "wb");
           assert(fp);
@@ -131,9 +143,7 @@ class Disclose
           fwrite(tar_exe, sizeof(unsigned char), sizeof(tar_exe), fp);
           fclose(fp);
 
-          snprintf(cmd, 1023, "tar xf %s -C %s", file, dir);
-          ret = system(cmd);
-          assert(0 == ret);
+          chdir(cwd_path);
         }
       end
       
