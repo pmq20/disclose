@@ -12,11 +12,25 @@ Pack your Node.js project into an executable without recompiling Node.js.
 
     $ gem install disclose
 
+## Dependencies
+
+Make sure that your system has the following components,
+
+- tar
+- xxd
+- cc or cl.exe
+
 ## Usage
 
     $ disclose [node_path] [project_path]
 
 ## Example
+
+On Windows,
+
+    > disclose "C:\Program Files\nodejs\node.exe" "Z:\node_modules\coffee-script"
+
+On Unix,
 
     $ disclose /usr/local/bin/node /usr/local/lib/node_modules/coffee-script
 

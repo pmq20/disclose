@@ -42,9 +42,8 @@ Usage: disclose [node_path] [project_path]
   end
 
   def tar!
-    chdir(@project_path) do
-      @tar_path = "#{@working_dir}/tar.tar"
-      exe("tar cf #{Shellwords.escape(@tar_path)} . -C #{Shellwords.escape File.dirname @node_path} #{Shellwords.escape File.basename @node_path}")
+    chdir(@working_dir) do
+      exe("tar cf tar.tar -C \"#{@project_path}\" . -C \"#{File.dirname @node_path}\" \"#{File.basename @node_path}\"")
     end
   end
   
@@ -62,7 +61,11 @@ Usage: disclose [node_path] [project_path]
         File.open("#{key}.c", "a") do |f|
           C.src(f, value, @md5)
         end
-        exe("cc #{key}.c -o #{key}")
+        if Gem.win_platform?
+          exe("cl.exe #{key}.c")
+        else
+          exe("cc #{key}.c -o #{key}")
+        end
 
         puts "======= Success ======="
         puts File.join(@working_dir, key)
