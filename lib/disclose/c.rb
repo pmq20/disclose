@@ -49,10 +49,10 @@ class Disclose
             char file[1024] = {0};
             char dir[1024] = {0};
             FILE *fp = NULL;
-            char *slashf = NULL;
-            char *slashd = NULL;
             int ret;
 
+            // Be careful about the number of XXXXXX
+            // Relate to the magical number 20 below.
             snprintf(file, 1023, "%s#{slash}disclose.file.XXXXXX", tmp_prefix);
             snprintf(dir, 1023, "%s#{slash}disclose.dir.XXXXXX", tmp_prefix);
 
@@ -69,11 +69,7 @@ class Disclose
 
             chdir(tmp_prefix);
 
-            slashf = strrchr(file, '#{slash}');
-            assert(slashf);
-            slashd = strrchr(dir, '#{slash}');
-            assert(slashd);
-            snprintf(cmd, 1023, "tar xf \\"%s\\" -C \\"%s\\"", slashf + 1, slashd + 1);
+            snprintf(cmd, 1023, "tar xf \\"%s\\" -C \\"%s\\"", file + strlen(file) - 20, dir + strlen(dir) - 20);
             ret = system(cmd);
             assert(0 == ret);
 
