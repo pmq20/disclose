@@ -12,12 +12,28 @@ class Disclose
           #include <sys/types.h>
           #include <sys/stat.h>
 
+          char *tmp_prefix;
+          char md5_path[256];
+
+          void get_tmp_prefix() {
+            tmp_prefix = getenv("TMPDIR");
+            if (NULL != tmp_prefix) return;
+            tmp_prefix = getenv("TMP");
+            if (NULL != tmp_prefix) return;
+            tmp_prefix = getenv("TEMP");
+            if (NULL != tmp_prefix) return;
+            tmp_prefix = getcwd(NULL);
+          }
+
           void untar() {
             char cmd[256] = {0};
-            char file[] = "/tmp/disclose.file.XXXXXX";
-            char dir[] = "/tmp/disclose.dir.XXXXXX";
+            char file[256] = {0};
+            char dir[256] = {0};
             FILE *fp = NULL;
             int ret;
+
+            snprintf(file, 255, "%s/disclose.file.XXXXXX", tmp_prefix);
+            snprintf(dir, 255, "%s/disclose.dir.XXXXXX", tmp_prefix);
 
             mktemp(file);
             mkdtemp(dir);
@@ -29,23 +45,32 @@ class Disclose
 
             #{Gem.win_platform? ? tar_windows : tar}
 
-            rename(dir, "/tmp/disclose.#{md5}");
+            rename(dir, md5_path);
           }
 
           int main(int argc, char const *argv[]) {
             char **argv2 = NULL;
             int i, index;
             struct stat info;
+            char arg0[256] = {0};
+            char arg1[256] = {0};
 
-            if( stat( "/tmp/disclose.#{md5}", &info ) != 0 )
+            get_tmp_prefix();
+            snprintf(md5_path, 255, "%s/disclose.#{md5}", tmp_prefix);
+
+            if( stat( md5_path, &info ) != 0 )
                 untar();
 
-            assert(0 == stat( "/tmp/disclose.#{md5}", &info ) && info.st_mode & S_IFDIR);
+            assert(0 == stat( md5_path, &info ) && info.st_mode & S_IFDIR);
 
             argv2 = malloc(sizeof(char*) * (argc + 10));
             assert(argv2);
-            argv2[0] = "/tmp/disclose.#{md5}/node";
-            argv2[1] = "/tmp/disclose.#{md5}/#{name}";
+
+            snprintf(arg0, 255, "%s/node", md5_path);
+            snprintf(arg1, 255, "%s/#{name}", md5_path);
+
+            argv2[0] = arg0;
+            argv2[1] = arg1;
             index = 2;
             for (i = 1; i < argc; ++i) {
               argv2[index] = argv[i];
