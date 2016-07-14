@@ -17,8 +17,16 @@ Pack your Node.js project into an executable without recompiling Node.js.
 Make sure that your system has the following components,
 
 - tar
+- gzip
 - xxd
-- cc or cl.exe
+- cc
+
+or on Windows,
+
+- `tar.exe`, which could be installed by gnuwin32
+- `gzip.exe`, which could be installed by gnuwin32
+- `xxd.exe`, which could be installed by gvim
+- `cl.exe`, which could be installed by Visual Studio
 
 ## Usage
 

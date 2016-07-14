@@ -24,6 +24,7 @@ class Disclose
         windows_prepare(f) if Gem.win_platform?
         f.puts unistd
         f.puts %Q{
+          #include <string.h>
           #include <stdio.h>
           #include <stdlib.h>
           #include <assert.h>
@@ -46,30 +47,39 @@ class Disclose
 
           void untar() {
             char cmd[1024] = {0};
+            char file0[1024] = {0};
             char file[1024] = {0};
             char dir[1024] = {0};
             FILE *fp = NULL;
             int ret;
 
             // Be careful about the number of XXXXXX
-            // Relate to the magical number 20 below.
-            snprintf(file, 1023, "%s#{slash}disclose.file.XXXXXX", tmp_prefix);
+            // Relate to the magical numbers 23, 20, 19 below.
+            snprintf(file0, 1023, "%s#{slash}disclose.file.XXXXXX", tmp_prefix);
             snprintf(dir, 1023, "%s#{slash}disclose.dir.XXXXXX", tmp_prefix);
 
-            mktemp(file);
+            mktemp(file0);
             mktemp(dir);
             mkdir(dir#{', 0777' unless Gem.win_platform?});
 
+            snprintf(file, 1023, "%s.gz", file0);
+
             fp = fopen(file, "wb");
             assert(fp);
-            fwrite(tar_tar, sizeof(unsigned char), sizeof(tar_tar), fp);
+            fwrite(tar_tar_gz, sizeof(unsigned char), sizeof(tar_tar_gz), fp);
             fclose(fp);
 
             #{tar_windows if Gem.win_platform?}
 
             chdir(tmp_prefix);
 
-            snprintf(cmd, 1023, "tar xf \\"%s\\" -C \\"%s\\"", file + strlen(file) - 20, dir + strlen(dir) - 20);
+            snprintf(cmd, 1023, "gzip -d \\"%s\\"", file + strlen(file) - 23);
+            ret = system(cmd);
+            assert(0 == ret);
+
+            file[strlen(file) - 3] = '\\0';
+
+            snprintf(cmd, 1023, "tar xf \\"%s\\" -C \\"%s\\"", file + strlen(file) - 20, dir + strlen(dir) - 19);
             ret = system(cmd);
             assert(0 == ret);
 

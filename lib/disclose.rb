@@ -44,12 +44,13 @@ Usage: disclose [node_path] [project_path]
   def tar!
     chdir(@working_dir) do
       exe("tar cf tar.tar -C \"#{@project_path}\" . -C \"#{File.dirname @node_path}\" \"#{File.basename @node_path}\"")
+      exe("gzip tar.tar")
     end
   end
   
   def header!
     chdir(@working_dir) do
-      exe("xxd -i tar.tar > tar.h")
+      exe("xxd -i tar.tar.gz > tar.h")
       @md5 = Digest::MD5.file('tar.h').to_s
     end
   end
