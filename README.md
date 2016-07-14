@@ -36,7 +36,7 @@ or on Windows,
 
 On Windows,
 
-    > disclose "C:\Program Files\nodejs\node.exe" "Z:\node_modules\coffee-script"
+    > disclose "C:\Program Files\nodejs\node.exe" "C:\Users\pmq20\AppData\Roaming\npm\node_modules\coffee-script"
 
 On Unix,
 
