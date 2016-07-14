@@ -23,10 +23,10 @@ Make sure that your system has the following components,
 
 or on Windows,
 
-- `tar.exe`, which could be installed by gnuwin32
-- `gzip.exe`, which could be installed by gnuwin32
-- `xxd.exe`, which could be installed by gvim
-- `cl.exe`, which could be installed by Visual Studio
+- `tar.exe`, which could be installed by [gnuwin32](http://gnuwin32.sourceforge.net/)
+- `gzip.exe`, which could be installed by [gnuwin32](http://gnuwin32.sourceforge.net/)
+- `xxd.exe`, which could be installed by [gvim](http://www.vim.org/download.php#pc)
+- `cl.exe`, which could be installed by [Visual Studio](https://www.visualstudio.com/)
 
 ## Usage
 
