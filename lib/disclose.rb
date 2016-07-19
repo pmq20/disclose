@@ -62,11 +62,8 @@ Usage: disclose [node_path] [project_path]
         File.open("#{key}.c", "a") do |f|
           C.src(f, value, @md5)
         end
-        if Gem.win_platform?
-          exe("cl.exe #{ENV['DISCLOSE_COMPILER_ARG']} #{key}.c")
-        else
-          exe("cc #{ENV['DISCLOSE_COMPILER_ARG']} #{key}.c -o #{key}")
-        end
+
+        exe("gcc #{ENV['DISCLOSE_COMPILER_ARG']} #{key}.c -o #{key}")
 
         puts "======= Success ======="
         puts File.join(@working_dir, key)

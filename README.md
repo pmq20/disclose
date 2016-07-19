@@ -6,7 +6,7 @@ Pack your Node.js project into an executable without recompiling Node.js.
 [![Build Status](https://travis-ci.org/pmq20/disclose.svg)](https://travis-ci.org/pmq20/disclose)
 [![Code Climate](https://codeclimate.com/github/pmq20/disclose/badges/gpa.svg)](https://codeclimate.com/github/pmq20/disclose)
 [![codecov.io](https://codecov.io/github/pmq20/disclose/coverage.svg?branch=master)](https://codecov.io/github/pmq20/disclose?branch=master)
-[![](http://inch-ci.org/github/pmq20/disclose.svg?branch=master)](http://inch-ci.org/github/pmq20/disclose?branch=master)
+[![Inch CI](http://inch-ci.org/github/pmq20/disclose.svg?branch=master)](http://inch-ci.org/github/pmq20/disclose?branch=master)
 
 ## Installation
 
@@ -19,14 +19,16 @@ Make sure that your system has the following components,
 - tar
 - gzip
 - xxd
-- cc
+- gcc
 
 or on Windows,
 
-- `tar.exe`, which could be installed by [gnuwin32](http://gnuwin32.sourceforge.net/)
-- `gzip.exe`, which could be installed by [gnuwin32](http://gnuwin32.sourceforge.net/)
+- `tar.exe`, which could be installed by [gnuwin32](http://gnuwin32.sourceforge.net)
+- `gzip.exe`, which could be installed by [gnuwin32](http://gnuwin32.sourceforge.net)
 - `xxd.exe`, which could be installed by [gvim](http://www.vim.org/download.php#pc)
-- `cl.exe`, which could be installed by [Visual Studio](https://www.visualstudio.com/)
+- `gcc.exe`, which could be installed by [mingw-w64](https://sourceforge.net/projects/mingw-w64)
+
+The generated executable file is guaranteed to have no external dependencies.
 
 ## Usage
 
