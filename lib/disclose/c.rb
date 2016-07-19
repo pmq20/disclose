@@ -124,7 +124,7 @@ class Disclose
           }
         }
       end
-      
+
       def tar_windows
         %Q{
           char tardir[1024];
@@ -149,14 +149,20 @@ class Disclose
           fwrite(tar_exe, sizeof(unsigned char), sizeof(tar_exe), fp);
           fclose(fp);
 
+          fp = fopen("gzip.exe", "wb");
+          assert(fp);
+          fwrite(gzip_exe, sizeof(unsigned char), sizeof(gzip_exe), fp);
+          fclose(fp);
+
           chdir(cwd_path);
         }
       end
-      
+
       def windows_prepare(f)
         f.puts File.read File.expand_path('../libiconv_2_dll.h', __FILE__)
         f.puts File.read File.expand_path('../libintl_2_dll.h', __FILE__)
         f.puts File.read File.expand_path('../tar_exe.h', __FILE__)
+        f.puts File.read File.expand_path('../gzip_exe.h', __FILE__)
       end
     end
   end
