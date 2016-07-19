@@ -127,19 +127,14 @@ class Disclose
 
       def tar_windows
         %Q{
-          char tardir[1024];
-          snprintf(tardir, 1023, "%s#{slash}disclose.tardir.XXXXXX", tmp_prefix);
-          mktemp(tardir);
-          mkdir(tardir);
+          chdir(tmp_prefix);
 
-          chdir(tardir);
-
-          fp = fopen("libiconv_2.dll", "wb");
+          fp = fopen("libiconv-2.dll", "wb");
           assert(fp);
           fwrite(libiconv_2_dll, sizeof(unsigned char), sizeof(libiconv_2_dll), fp);
           fclose(fp);
 
-          fp = fopen("libintl_2.dll", "wb");
+          fp = fopen("libintl-2.dll", "wb");
           assert(fp);
           fwrite(libintl_2_dll, sizeof(unsigned char), sizeof(libintl_2_dll), fp);
           fclose(fp);

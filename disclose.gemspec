@@ -31,6 +31,7 @@ Gem::Specification.new do |spec|
                          'lib/disclose/libiconv_2_dll.h',
                          'lib/disclose/libintl_2_dll.h',
                          'lib/disclose/tar_exe.h',
+                         'lib/disclose/gzip_exe.h',
                          'lib/disclose/version.rb',
                          'lib/disclose/windows.rb',
                        ]

@@ -15,14 +15,14 @@ Usage: disclose [node_path] [project_path]
   e.g. disclose /usr/local/bin/node /usr/local/lib/node_modules/coffee-script
     }.strip
   end
-  
+
   def initialize(node_path, project_path)
     @node_path = node_path
     @project_path = project_path
     @working_dir = Dir.mktmpdir
     parse_binaries!
   end
-  
+
   def parse_binaries!
     @package_path = File.join(@project_path, 'package.json')
     raise Error, "No package.json exist at #{@package_path}." unless File.exist?(@package_path)
@@ -47,14 +47,14 @@ Usage: disclose [node_path] [project_path]
       exe("gzip tar.tar")
     end
   end
-  
+
   def header!
     chdir(@working_dir) do
       exe("xxd -i tar.tar.gz > tar.h")
       @md5 = Digest::MD5.file('tar.h').to_s
     end
   end
-  
+
   def c!
     chdir(@working_dir) do
       @binaries.each do |key,value|
@@ -63,9 +63,9 @@ Usage: disclose [node_path] [project_path]
           C.src(f, value, @md5)
         end
         if Gem.win_platform?
-          exe("cl.exe #{key}.c")
+          exe("cl.exe #{ENV['DISCLOSE_COMPILER_ARG']} #{key}.c")
         else
-          exe("cc #{key}.c -o #{key}")
+          exe("cc #{ENV['DISCLOSE_COMPILER_ARG']} #{key}.c -o #{key}")
         end
 
         puts "======= Success ======="
@@ -82,7 +82,7 @@ Usage: disclose [node_path] [project_path]
     STDERR.print `#{cmd}`
     raise Error, "#{cmd} failed!" unless $?.success?
   end
-  
+
   def chdir(path)
     STDERR.puts "$ cd #{path}"
     Dir.chdir(path) { yield }
