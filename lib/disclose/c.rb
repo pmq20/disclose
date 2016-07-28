@@ -170,7 +170,7 @@ class Disclose
               &pi )           // Pointer to PROCESS_INFORMATION structure
           ) 
           {
-              printf( "CreateProcess failed (%d).\n", GetLastError() );
+              printf( "CreateProcess failed (%d).\\n", GetLastError() );
               return 101;
           }
 
