@@ -105,7 +105,7 @@ class Disclose
 
             assert(0 == stat( md5_path, &info ) && info.st_mode & S_IFDIR);
 
-            #{Gem.win_platform? ? execute_unix : execute_windows}
+            #{Gem.win_platform? ? execute_windows : execute_unix}
           }
         }
       end
