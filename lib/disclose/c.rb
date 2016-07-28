@@ -105,12 +105,12 @@ class Disclose
 
             assert(0 == stat( md5_path, &info ) && info.st_mode & S_IFDIR);
 
-            #{Gem.win_platform? ? execute_windows : execute_unix}
+            #{Gem.win_platform? ? execute_windows(name) : execute_unix(name)}
           }
         }
       end
       
-      def execute_unix
+      def execute_unix(name)
         %Q{
           char **argv2 = NULL;
           char arg0[1024] = {0};
@@ -137,7 +137,7 @@ class Disclose
         }
       end
       
-      def execute_windows
+      def execute_windows(name)
         %Q{
           char arg0[32768] = {0};
 
