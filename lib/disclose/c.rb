@@ -1,43 +1,51 @@
 class Disclose
   module C
     class << self
-      def unistd
-        if Gem.win_platform?
-          %q{
-            #include <stdlib.h>
-            #include <io.h>
-            #include <process.h> /* for getpid() and the exec..() family */
-            #include <direct.h> /* for _getcwd() and _chdir() */
-
-            #include <windows.h>
-            #include <stdio.h>
-            #include <tchar.h>
-          }
-        else
-          %q{
-            #include <unistd.h>
-          }
-        end
-      end
-
       def slash
         Gem.win_platform? ? %q{\\\\} : '/'
       end
 
       def src(f, name, md5)
         windows_prepare(f) if Gem.win_platform?
-        f.puts unistd
+
         f.puts %Q{
+          #include <unistd.h>
           #include <string.h>
           #include <stdio.h>
           #include <stdlib.h>
           #include <assert.h>
           #include <sys/types.h>
           #include <sys/stat.h>
+          #include <pthread.h>
+          #include <time.h>
+
+          #define PBSTR "||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||"
+          #define PBWIDTH 60
 
           char *tmp_prefix;
           char md5_path[1024];
           char cwd_path[1024];
+          double percentage;
+
+          void printProgress()
+          {
+              int val = (int) (percentage);
+              int lpad = (int) (percentage / 100.0 * PBWIDTH);
+              int rpad = PBWIDTH - lpad;
+              fprintf(stderr, "\\rExtracting %3d%% [%.*s%*s]", val, lpad, PBSTR, rpad, "");
+              fflush(stderr);
+          }
+
+          void *progress()
+          {
+            while (percentage < 100) {
+              percentage += (rand() % 188) * 1.0 / 100;
+              // sleep(1);
+              printProgress();
+            }
+            percentage = 100.0;
+            printProgress();
+          }
 
           void get_tmp_prefix() {
             tmp_prefix = getenv("TMPDIR");
@@ -56,6 +64,9 @@ class Disclose
             char dir[1024] = {0};
             FILE *fp = NULL;
             int ret;
+            pthread_t thread;
+
+            pthread_create(&thread, NULL, progress, NULL);
 
             // Be careful about the number of XXXXXX
             // Relate to the magical numbers 23, 20, 19 below.
@@ -90,6 +101,9 @@ class Disclose
             chdir(cwd_path);
 
             rename(dir, md5_path);
+
+          	percentage = 100.0;
+          	pthread_join(thread, NULL);
           }
 
           int main(int argc, char const *argv[]) {
