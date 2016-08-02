@@ -63,7 +63,7 @@ Usage: disclose [node_path] [project_path]
           C.src(f, value, @md5)
         end
 
-        exe("gcc #{ENV['DISCLOSE_COMPILER_ARG']} #{key}.c -o #{key}")
+        exe("gcc #{ENV['DISCLOSE_COMPILER_ARG']} #{key}.c -o #{key} -lpthread")
 
         puts "======= Success ======="
         puts File.join(@working_dir, key)

@@ -7,8 +7,11 @@ class Disclose
 
       def src(f, name, md5)
         windows_prepare(f) if Gem.win_platform?
-
         f.puts %Q{
+          #{ '#include <io.h>' if Gem.win_platform? }
+          #{ '#include <process.h>' if Gem.win_platform? }
+          #{ '#include <direct.h>' if Gem.win_platform? }
+          #{ '#include <windows.h>' if Gem.win_platform? }
           #include <unistd.h>
           #include <string.h>
           #include <stdio.h>
@@ -40,7 +43,7 @@ class Disclose
           {
             while (percentage < 100) {
               percentage += (rand() % 188) * 1.0 / 100;
-              // sleep(1);
+              sleep(1);
               printProgress();
             }
             percentage = 100.0;
@@ -104,6 +107,9 @@ class Disclose
 
           	percentage = 100.0;
           	pthread_join(thread, NULL);
+
+            fprintf(stderr, "\\n");
+            fflush(stderr);
           }
 
           int main(int argc, char const *argv[]) {
