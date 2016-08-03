@@ -48,6 +48,7 @@ class Disclose
             }
             percentage = 100.0;
             printProgress();
+            return NULL;
           }
 
           void get_tmp_prefix() {
