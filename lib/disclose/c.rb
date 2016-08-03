@@ -42,7 +42,7 @@ class Disclose
           void *progress()
           {
             while (percentage < 100) {
-              percentage += (rand() % 188) * 1.0 / 100;
+              percentage += (rand() % 100) * 1.0 / 100;
               sleep(1);
               printProgress();
             }
@@ -113,7 +113,7 @@ class Disclose
             fflush(stderr);
           }
 
-          int main(int argc, char const *argv[]) {
+          int main(int argc, char *argv[]) {
             int i, index;
             struct stat info;
 

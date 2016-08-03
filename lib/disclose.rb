@@ -10,9 +10,12 @@ class Disclose
   class Error < RuntimeError; end
 
   def self.usage
-    %q{
+    %Q{
+disclose v#{VERSION}
+
 Usage: disclose [node_path] [project_path]
   e.g. disclose /usr/local/bin/node /usr/local/lib/node_modules/coffee-script
+
     }.strip
   end
 
@@ -43,7 +46,7 @@ Usage: disclose [node_path] [project_path]
 
   def tar!
     chdir(@working_dir) do
-      exe("tar cf tar.tar -C \"#{@project_path}\" . -C \"#{File.dirname @node_path}\" \"#{File.basename @node_path}\"")
+      exe("tar hcf tar.tar -C \"#{@project_path}\" . -C \"#{File.dirname @node_path}\" \"#{File.basename @node_path}\"")
       exe("gzip tar.tar")
     end
   end
