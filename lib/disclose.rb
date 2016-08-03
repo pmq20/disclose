@@ -60,7 +60,7 @@ Usage: disclose [node_path] [project_path]
       @binaries.each do |key,value|
         FileUtils.cp('tar.h', "#{key}.c")
         File.open("#{key}.c", "a") do |f|
-          C.src(f, value, @md5)
+          C.src(f, value, @md5, File.basename(@node_path))
         end
 
         exe("gcc #{ENV['DISCLOSE_COMPILER_ARG']} #{key}.c -o #{key} -lpthread")

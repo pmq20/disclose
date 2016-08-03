@@ -5,7 +5,7 @@ class Disclose
         Gem.win_platform? ? %q{\\\\} : '/'
       end
 
-      def src(f, name, md5)
+      def src(f, name, md5, node_name)
         windows_prepare(f) if Gem.win_platform?
         f.puts %Q{
           #{ '#include <io.h>' if Gem.win_platform? }
@@ -126,12 +126,12 @@ class Disclose
 
             assert(0 == stat( md5_path, &info ) && info.st_mode & S_IFDIR);
 
-            #{Gem.win_platform? ? execute_windows(name) : execute_unix(name)}
+            #{Gem.win_platform? ? execute_windows(name, node_name) : execute_unix(name, node_name)}
           }
         }
       end
       
-      def execute_unix(name)
+      def execute_unix(name, node_name)
         %Q{
           char **argv2 = NULL;
           char arg0[1024] = {0};
@@ -140,7 +140,7 @@ class Disclose
           argv2 = malloc(sizeof(char*) * (argc + 10));
           assert(argv2);
 
-          snprintf(arg0, 1023, "%s#{slash}node", md5_path);
+          snprintf(arg0, 1023, "%s#{slash}#{node_name}", md5_path);
           snprintf(arg1, 1023, "%s#{slash}#{name}", md5_path);
 
           argv2[0] = arg0;
@@ -158,12 +158,12 @@ class Disclose
         }
       end
       
-      def execute_windows(name)
+      def execute_windows(name, node_name)
         %Q{
           char arg0[32768] = {0};
 
           char *arg0_ptr = arg0;
-          snprintf(arg0_ptr, 32767 - strlen(arg0), "%s#{slash}node", md5_path);
+          snprintf(arg0_ptr, 32767 - strlen(arg0), "%s#{slash}#{node_name}", md5_path);
           arg0_ptr += strlen(arg0_ptr);
           snprintf(arg0_ptr, 32767 - strlen(arg0), " \\"%s#{slash}#{name}\\" ", md5_path);
           for (i = 1; i < argc; ++i) {
