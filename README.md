@@ -44,6 +44,10 @@ On Unix,
 
     $ disclose /usr/local/bin/node /usr/local/lib/node_modules/coffee-script
 
+## Hints
+
+* We recommend using `npm3` to generate the `node_modules` folder before packing
+
 ## License
 
 The gem is available as open source under the terms of the [MIT License](http://opensource.org/licenses/MIT).
