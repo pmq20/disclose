@@ -6,7 +6,7 @@ I have made a new project called node-compiler to compile your Node.js project i
 
 It is better than disclose in that it never runs slowly for the first time, since your source code is compiled together with the Node.js interpreter, just like the standard Node.js libraries.
 
-Additionally, it redirect file and directory requests transparently to the memory instead of to the file system at runtime. So that no source code is required to run the compiled product.
+Additionally, it redirects file/directory requests transparently to the memory instead of to the file system at runtime. So that no source code is required to run the compiled product.
 
 # Disclose
 
