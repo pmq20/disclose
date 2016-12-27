@@ -1,3 +1,13 @@
+__Try Node.js Compiler__
+
+https://github.com/pmq20/node-compiler
+
+I have made a new project called node-compiler to compile your Node.js project into one single executable.
+
+It is better than disclose in that it never runs slowly for the first time, since your source code is compiled together with Node.js interpreter, just like the standard Node.js libraries.
+
+Additionally, it redirect file and directory requests transparently to the memory instead of to the file system at runtime. So that no source code is required to run the compiled product.
+
 # Disclose
 
 Pack your Node.js project into an executable without recompiling Node.js.
